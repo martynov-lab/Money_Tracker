@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:money_tracker/bloc/register_bloc/register_bloc.dart';
-import 'package:money_tracker/repository/user_repository.dart';
+import 'package:money_tracker/data/repository/user_repository.dart';
 import 'package:money_tracker/ui/pages/login_page.dart';
 import 'package:money_tracker/ui/widgets/register_form.dart';
 
@@ -68,7 +68,7 @@ class RegistrationPage extends StatelessWidget {
                 ),
                 RegisterForm(),
                 Padding(
-                  padding: const EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.only(top: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

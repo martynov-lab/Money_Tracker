@@ -1,7 +1,7 @@
 import 'package:money_tracker/bloc/register_bloc/register_event.dart';
 import 'package:money_tracker/bloc/register_bloc/register_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:money_tracker/repository/user_repository.dart';
+import 'package:money_tracker/data/repository/user_repository.dart';
 import 'package:money_tracker/utils/validator.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {

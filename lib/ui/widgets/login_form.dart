@@ -6,7 +6,7 @@ import 'package:money_tracker/bloc/login_bloc/login_bloc.dart';
 import 'package:money_tracker/bloc/login_bloc/login_bloc.dart';
 import 'package:money_tracker/bloc/login_bloc/login_event.dart';
 import 'package:money_tracker/bloc/login_bloc/login_state.dart';
-import 'package:money_tracker/repository/user_repository.dart';
+import 'package:money_tracker/data/repository/user_repository.dart';
 import 'package:money_tracker/ui/widgets/submit_button.dart';
 import 'package:money_tracker/ui/widgets/google_button.dart';
 import 'package:money_tracker/utils/validator.dart';

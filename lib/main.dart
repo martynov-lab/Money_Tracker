@@ -5,7 +5,10 @@ import 'package:money_tracker/bloc/authentication_bloc/authentication_bloc.dart'
 import 'package:money_tracker/bloc/authentication_bloc/authentication_event.dart';
 import 'package:money_tracker/bloc/authentication_bloc/authentication_state.dart';
 import 'package:money_tracker/bloc/simple_bloc_observer.dart';
-import 'package:money_tracker/repository/user_repository.dart';
+import 'package:money_tracker/bloc/transaction_bloc/transaction_bloc.dart';
+import 'package:money_tracker/data/repository/transaction_repository.dart';
+import 'package:money_tracker/data/repository/user_repository.dart';
+import 'package:money_tracker/ui/pages/add_transaction.dart';
 import 'package:money_tracker/ui/pages/home_page.dart';
 import 'package:money_tracker/ui/pages/login_page.dart';
 
@@ -13,11 +16,21 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Bloc.observer = SimpleBlocObserver();
-  final UserRepository userRepository = UserRepository();
+  final userRepository = UserRepository();
+  final transactionRepository = TransactionRepository();
   runApp(
-    BlocProvider(
-      create: (context) => AuthenticationBloc(userRepository: userRepository)
-        ..add(AuthenticationStarted()),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              AuthenticationBloc(userRepository: userRepository)
+                ..add(AuthenticationStarted()),
+        ),
+        BlocProvider<TransactionBloc>(
+          create: (context) =>
+              TransactionBloc(transactionRepository)..add(TransactionLoad()),
+        ),
+      ],
       child: App(userRepository: userRepository),
     ),
   );
@@ -34,6 +47,11 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Todo list',
       debugShowCheckedModeBanner: false,
+      // initialRoute: '/',
+      // routes: {
+      //   // '/': (BuildContext context) => HomePage(), // корневая страница
+      //   '/expenditure': (BuildContext context) => AddExpenditure(),
+      // },
       theme: ThemeData(
           primaryColor: Colors.white,
           visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -52,9 +70,7 @@ class App extends StatelessWidget {
             );
           }
           if (state is AuthenticationSuccess) {
-            return HomePage(
-              user: state.firebaseUser,
-            );
+            return HomePage(user: state.firebaseUser);
           }
           return Scaffold(
             appBar: AppBar(),

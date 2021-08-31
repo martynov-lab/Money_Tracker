@@ -1,16 +1,16 @@
 # money_tracker
 
-A new Flutter project.
+## **Приложение, предназначенное для учета расходов и доходов.**
 
-## Getting Started
+Приложение позволяет просто и удобно добавить информацию о расходах в момент покупки или получения дохода.
+Удобный и информативный интерфейс поможет контролировать ваши расходы и планировать бюджет.
 
-This project is a starting point for a Flutter application.
+<img src="readme\login.jpg" width="150">   <img src="readme\registration.jpg" width="150">  <img src="readme\transaction.jpg" width="150">   <img src="readme\profile.jpg" width="150">
 
-A few resources to get you started if this is your first Flutter project:
+**Приложение имеет 4 вкладки на основном экране:**
+1. Вкладка транзакции где вы можете добавить расход или доход по выбранной категории.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+2. Вкладка Аналитика, где будут выводиться сумму расходов и доходов по категориям.
+3. Вкладка Бюджет, где можно будет планировать свои расходы и доходы и сопоставлять их с фактическими расходами и доходами.
+4. Вкладка Еще, где будет отображена информация о профиле и приложении, а также можно будет добавить категории расходов и доходов. 
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:money_tracker/repository/user_repository.dart';
+import 'package:money_tracker/data/repository/user_repository.dart';
 
 import 'authentication_event.dart';
 import 'authentication_state.dart';
