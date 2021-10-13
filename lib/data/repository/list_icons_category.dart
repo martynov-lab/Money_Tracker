@@ -1,0 +1,35 @@
+import 'package:flutter/material.dart';
+
+class IconsCategory {
+  final List<IconData> iconsCategory = [
+    Icons.credit_card,
+    Icons.call,
+    Icons.phone_iphone_outlined,
+    Icons.account_balance_wallet_outlined,
+    Icons.attach_money,
+    Icons.blender,
+    Icons.bolt,
+    Icons.cake,
+    Icons.carpenter,
+    Icons.chair_outlined,
+    Icons.child_care_outlined,
+    Icons.child_friendly_outlined,
+    Icons.shopping_cart_outlined,
+    Icons.local_gas_station_outlined,
+    Icons.directions_car_filled_outlined,
+    Icons.local_bar_outlined,
+    Icons.flight,
+    Icons.kitchen_outlined,
+    Icons.fitness_center_outlined,
+    Icons.beach_access_outlined,
+    Icons.smoking_rooms_outlined,
+    Icons.school_outlined,
+    Icons.hiking_outlined,
+    Icons.home_outlined,
+    Icons.cleaning_services_outlined,
+    Icons.pets_outlined,
+    Icons.build_outlined,
+    Icons.cut_outlined,
+    Icons.local_cafe_outlined,
+  ];
+}

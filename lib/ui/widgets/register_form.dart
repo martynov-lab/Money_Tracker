@@ -5,11 +5,11 @@ import 'package:money_tracker/bloc/authentication_bloc/authentication_event.dart
 import 'package:money_tracker/bloc/register_bloc/register_bloc.dart';
 import 'package:money_tracker/bloc/register_bloc/register_event.dart';
 import 'package:money_tracker/bloc/register_bloc/register_state.dart';
-import 'package:money_tracker/ui/widgets/google_button.dart';
 import 'package:money_tracker/ui/widgets/submit_button.dart';
 import 'package:money_tracker/utils/validator.dart';
 
 class RegisterForm extends StatefulWidget {
+  @override
   State<RegisterForm> createState() => _RegisterFormState();
 }
 
@@ -134,11 +134,11 @@ class _RegisterFormState extends State<RegisterForm> {
       child: TextFormField(
         validator: (value) {
           switch (hint) {
-            case "Email":
+            case 'Email':
               return Validator.validateEmail(email: value.toString());
-            case "Password":
+            case 'Password':
               return Validator.validatePassword(password: value.toString());
-            case "User Name":
+            case 'User Name':
               return Validator.validateName(name: value.toString());
             default:
           }

@@ -3,19 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:money_tracker/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:money_tracker/bloc/authentication_bloc/authentication_event.dart';
 import 'package:money_tracker/bloc/login_bloc/login_bloc.dart';
-import 'package:money_tracker/bloc/login_bloc/login_bloc.dart';
 import 'package:money_tracker/bloc/login_bloc/login_event.dart';
 import 'package:money_tracker/bloc/login_bloc/login_state.dart';
-import 'package:money_tracker/data/repository/user_repository.dart';
 import 'package:money_tracker/ui/widgets/submit_button.dart';
 import 'package:money_tracker/ui/widgets/google_button.dart';
 import 'package:money_tracker/utils/validator.dart';
 
 class LoginForm extends StatefulWidget {
-  final UserRepository _userRepository;
-  LoginForm({Key? key, required UserRepository userRepository})
-      : _userRepository = userRepository,
-        super(key: key);
+  LoginForm({Key? key}) : super(key: key);
 
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -26,8 +21,6 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _passwordController = TextEditingController();
 
   late LoginBloc _loginBloc;
-
-  UserRepository get _userRepository => widget._userRepository;
 
   bool get isPopulated =>
       _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;

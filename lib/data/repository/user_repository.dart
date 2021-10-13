@@ -53,10 +53,8 @@ class UserRepository {
   }
 
   Future<void> signOut() async {
-    //return Future.wait([
     await _firebaseAuth.signOut();
     await _googleSignIn.signOut();
-    //]);
   }
 
   MyAppUser _userFromFirebase(User user) {

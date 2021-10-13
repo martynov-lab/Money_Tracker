@@ -4,32 +4,62 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:money_tracker/bloc/category_bloc/category_bloc.dart';
 import 'package:money_tracker/bloc/transaction_bloc/transaction_bloc.dart';
-import 'package:money_tracker/utils/hex_color.dart';
 
-class AddTransaction extends StatefulWidget {
-  AddTransaction({Key? key, required this.typeTransaction}) : super(key: key);
+class UpdateTransaction extends StatefulWidget {
+  final String id;
+  final String currentDate;
+  final String amount;
+  final List category;
+  final String categoryId;
+  final String comment;
   final String typeTransaction;
+
+  UpdateTransaction({
+    Key? key,
+    required this.id,
+    required this.typeTransaction,
+    required this.amount,
+    required this.category,
+    required this.categoryId,
+    required this.comment,
+    required this.currentDate,
+  }) : super(key: key);
+
   @override
-  _AddTransactionState createState() => _AddTransactionState();
+  _UpdateTransactionState createState() => _UpdateTransactionState();
 }
 
-class _AddTransactionState extends State<AddTransaction> {
-  TextEditingController _expenditureController = TextEditingController();
-  TextEditingController _commentController = TextEditingController();
-  GlobalKey<FormState> _formKeyTransaction = GlobalKey<FormState>();
+class _UpdateTransactionState extends State<UpdateTransaction> {
+  final TextEditingController _expenditureController = TextEditingController();
+  final TextEditingController _commentController = TextEditingController();
+  final GlobalKey<FormState> _formKeyTransaction = GlobalKey<FormState>();
 
   bool _changeRepeat = false;
   bool _isPickedDate = false;
   DateTime nowDate = DateTime.now();
   DateFormat formatterDate = DateFormat('dd.MM.yyyy');
   late String formattedDate = formatterDate.format(nowDate);
+  late int selectedIndex;
+  late String selectedTypeTransaction;
 
-  int selectedIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    _expenditureController.text = widget.amount;
+    _commentController.text = widget.comment;
+    formattedDate = widget.currentDate;
+    selectedTypeTransaction = widget.typeTransaction;
+
+    for (var i = 0; i < widget.category.length; i++) {
+      if (widget.category[i].id == widget.categoryId) {
+        selectedIndex = i;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final TransactionBloc transactionBloc =
-        BlocProvider.of<TransactionBloc>(context);
+    final transactionBloc = BlocProvider.of<TransactionBloc>(context);
 
     return BlocBuilder<CategoryBloc, CategoryState>(
         builder: (BuildContext context, CategoryState state) {
@@ -50,25 +80,17 @@ class _AddTransactionState extends State<AddTransaction> {
             backgroundColor: Colors.deepPurple[300],
             elevation: 4,
             actions: <Widget>[
+              IconButton(
+                  onPressed: () {
+                    transactionBloc.add(TransactionDelete(id: widget.id));
+                    Navigator.of(context).pop();
+                  },
+                  icon: Icon(Icons.delete)),
               TextButton(
                 onPressed: () {
                   _formKeyTransaction.currentState!.save();
-
-                  // transaction!.amount = _expenditureController.text;
-                  // transaction!.comment = _commentController.text;
-                  // transaction!.typeTransaction = widget.typeTransaction;
-                  // transaction!.currentDate = formattedDate;
-                  /* 
-                  -------------------
-                   */
-                  // transaction!.category!.name =
-                  //     state.category[selectedIndex].name;
-                  // transaction!.category!.color =
-                  //     state.category[selectedIndex].color;
-                  // transaction!.category!.icon =
-                  //     state.category[selectedIndex].icon;
-
-                  transactionBloc.add(TransactionAdd(
+                  transactionBloc.add(TransactionUpdate(
+                    id: widget.id,
                     currentDate: formattedDate,
                     amount: _expenditureController.text,
                     categoryId: state.category[selectedIndex].id!,
@@ -76,7 +98,7 @@ class _AddTransactionState extends State<AddTransaction> {
                     categoryColor: state.category[selectedIndex].color!,
                     categoryIcon: state.category[selectedIndex].icon!,
                     comment: _commentController.text,
-                    typeTransaction: widget.typeTransaction,
+                    typeTransaction: selectedTypeTransaction,
                   ));
                   _formKeyTransaction.currentState!.reset();
                   transactionBloc.add(TransactionLoad());
@@ -95,6 +117,7 @@ class _AddTransactionState extends State<AddTransaction> {
               key: _formKeyTransaction,
               child: Column(
                 children: <Widget>[
+                  //*   ЗНАЧЕНИЕ ТРАНЗАКЦИИ
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
@@ -116,16 +139,10 @@ class _AddTransactionState extends State<AddTransaction> {
                           color: Colors.grey,
                         ),
                         suffixText: 'Р',
-                        // suffixIcon: IconButton(
-                        //   icon: Icon(Icons.close),
-                        //   color: Colors.grey,
-                        //   onPressed: () {
-                        //     _expenditureController.clear();
-                        //   },
-                        // ),
                       ),
                     ),
                   ),
+                  //* ИКОНКА
                   Container(
                     height: 70,
                     child: Container(
@@ -138,13 +155,15 @@ class _AddTransactionState extends State<AddTransaction> {
                               setState(() {
                                 // устанавливаем индекс выделенного элемента
                                 selectedIndex = index;
+                                print(
+                                    'selectedIndex после нажатия---$selectedIndex');
                               });
                             },
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                selectedIndex == index
-                                    ? Container(
+                            child: selectedIndex == index
+                                ? Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Container(
                                         padding: const EdgeInsets.all(5),
                                         margin: const EdgeInsets.only(
                                             left: 10, right: 10),
@@ -152,11 +171,10 @@ class _AddTransactionState extends State<AddTransaction> {
                                           borderRadius:
                                               BorderRadius.circular(50),
                                           border: Border.all(
-                                              width: 2,
-                                              color: HexColor(state
-                                                  .category[index].color!)),
-                                          color: HexColor(
-                                              state.category[index].color!), //
+                                            width: 2,
+                                            color: Colors.grey,
+                                          ),
+                                          color: Colors.grey, //
                                         ),
                                         child: Icon(
                                           IconData(state.category[index].icon!,
@@ -164,8 +182,19 @@ class _AddTransactionState extends State<AddTransaction> {
                                           size: 35,
                                           color: Colors.white,
                                         ),
-                                      )
-                                    : Container(
+                                      ),
+                                      Container(
+                                        child: Text(
+                                          '${state.category[index].name}',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Container(
                                         padding: const EdgeInsets.all(5),
                                         margin: const EdgeInsets.only(
                                             left: 10, right: 10),
@@ -173,32 +202,108 @@ class _AddTransactionState extends State<AddTransaction> {
                                           borderRadius:
                                               BorderRadius.circular(50),
                                           border: Border.all(
-                                              width: 2,
-                                              color: HexColor(state
-                                                  .category[index].color!)),
-                                          //color: HexColor(item.color!), //
+                                            width: 2,
+                                            color: Colors.grey,
+                                          ),
                                         ),
                                         child: Icon(
                                           IconData(state.category[index].icon!,
                                               fontFamily: 'MaterialIcons'),
                                           size: 35,
-                                          color: HexColor(
-                                              state.category[index].color!),
+                                          color: Colors.grey,
                                         ),
                                       ),
-                                Container(
-                                    child: Text(
-                                  '${state.category[index].name}',
-                                  textAlign: TextAlign.center,
-                                )),
-                              ],
-                            ),
+                                      Container(
+                                        child: Text(
+                                          '${state.category[index].name}',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                           );
                         },
                       ),
                     ),
                   ),
-
+                  //* ТИП ТРАНЗАКЦИИ
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        //* доход
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedTypeTransaction = 'income';
+                              });
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(right: 5),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 20),
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.grey, width: 1),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(3.0)),
+                                color: selectedTypeTransaction == 'income'
+                                    ? Colors.grey
+                                    : Colors.white,
+                              ),
+                              child: Text(
+                                'Доход',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: selectedTypeTransaction == 'income'
+                                      ? Colors.white
+                                      : Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        //* расход
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedTypeTransaction = 'expenditure';
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 20),
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.grey, width: 1),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(3.0)),
+                                color: selectedTypeTransaction == 'expenditure'
+                                    ? Colors.grey
+                                    : Colors.white,
+                              ),
+                              child: Text(
+                                'Расход',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color:
+                                      selectedTypeTransaction == 'expenditure'
+                                          ? Colors.white
+                                          : Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  //* ДАТА
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
@@ -230,7 +335,7 @@ class _AddTransactionState extends State<AddTransaction> {
                                     ),
                                   )
                                 : Text(
-                                    'Сегодня',
+                                    formattedDate,
                                     style: TextStyle(
                                       fontSize: 18,
                                       color: Colors.grey,
@@ -241,12 +346,11 @@ class _AddTransactionState extends State<AddTransaction> {
                       ),
                     ),
                   ),
+                  //* КОММЕНТАРИЙ
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       autofocus: false,
-                      //inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      //keyboardType: TextInputType.number,
                       controller: _commentController,
                       decoration: InputDecoration(
                         focusColor: Colors.grey,
@@ -266,14 +370,14 @@ class _AddTransactionState extends State<AddTransaction> {
                           icon: Icon(Icons.close),
                           color: Colors.grey,
                           onPressed: () {
-                            _expenditureController.clear();
+                            _commentController.clear();
                           },
                         ),
                       ),
                     ),
                   ),
-                  //SwitchListTile
                   Divider(color: Colors.grey),
+                  //* ПОВТОРЕНИЕ ОПЕРАЦИИ
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SwitchListTile(
@@ -306,18 +410,16 @@ class _AddTransactionState extends State<AddTransaction> {
     });
   }
 
-  _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+  void _selectDate(BuildContext context) async {
+    final picked = await showDatePicker(
       context: context,
       initialDate: nowDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2025),
     );
-    //print('nowDate: $nowDate');
     if (picked != nowDate) {
       nowDate = picked!;
       formattedDate = formatterDate.format(picked);
-      //print('formattedDate: $formattedDate');
       setState(() {
         _isPickedDate = true;
       });

@@ -5,81 +5,118 @@ import 'package:money_tracker/data/repository/user_repository.dart';
 import 'package:uuid/uuid.dart';
 
 class TransactionRepository {
-  //MyAppUser user = MyAppUser();
   UserRepository userRepository = UserRepository();
   MyTransaction transaction = MyTransaction();
 
-  // final user = userRepository.fetchCurrentUser();
-  // String collectionPath = '${user.name}_${user.id}';
-
   final FirebaseFirestore transactionDb = FirebaseFirestore.instance;
 
-  addTransaction(MyTransaction myTransaction) async {
+  CollectionReference<MyTransaction> collectionReference(MyAppUser user) {
+    var collectionPath = '${user.name}_${user.id}';
+
+    var transactionRef = transactionDb
+        .collection(collectionPath)
+        .doc('Transaction ${user.name}')
+        .collection('Transaction')
+        .withConverter<MyTransaction>(
+          fromFirestore: (snapshot, _) =>
+              MyTransaction.fromJson(snapshot.data()!),
+          toFirestore: (transaction, _) => transaction.toJson(),
+        );
+    return transactionRef;
+  }
+
+  //*ДОБАВЛЕНИЕ ТРАНЗАКЦИИ
+  Future<void> addTransaction({
+    required String currentDate,
+    required String amount,
+    required String categoryId,
+    required String categoryName,
+    required String categoryColor,
+    required int categoryIcon,
+    required String comment,
+    required String typeTransaction,
+  }) async {
     final user = await userRepository.fetchCurrentUser();
-    String collectionPath = '${user.name}_${user.id}';
+    //var collectionPath = '${user.name}_${user.id}';
     var uuid = const Uuid().v4();
 
-    CollectionReference<MyTransaction> transactionRef =
-        transactionDb.collection(collectionPath).withConverter<MyTransaction>(
-              fromFirestore: (snapshot, _) =>
-                  MyTransaction.fromJson(snapshot.data()!),
-              toFirestore: (transaction, _) => transaction.toJson(),
-            );
+    // CollectionReference<MyTransaction> transactionRef = transactionDb
+    //     .collection(collectionPath)
+    //     .doc('Transaction ${user.name}')
+    //     .collection('Transaction')
+    //     .withConverter<MyTransaction>(
+    //       fromFirestore: (snapshot, _) =>
+    //           MyTransaction.fromJson(snapshot.data()!),
+    //       toFirestore: (transaction, _) => transaction.toJson(),
+    //     );
 
-    await transactionRef.doc(uuid).set(
+    await collectionReference(user).doc(uuid).set(
           MyTransaction(
             id: uuid,
-            amount: myTransaction.amount,
-            comment: myTransaction.comment,
-            category: myTransaction.category,
-            currentDate: myTransaction.currentDate,
-            typeTransaction: myTransaction.typeTransaction,
+            amount: amount,
+            comment: comment,
+            categoryId: categoryId,
+            categoryName: categoryName,
+            categoryColor: categoryColor,
+            categoryIcon: categoryIcon,
+            currentDate: currentDate,
+            typeTransaction: typeTransaction,
           ),
         );
   }
 
+  //*ПОЛУЧЕНИЕ ТРАНЗАКЦИИ ИЗ FIREBASE
   Future<List<MyTransaction>> fetchTransaction() async {
     final user = await userRepository.fetchCurrentUser();
-    String collectionPath = '${user.name}_${user.id}';
-    //var uuid = const Uuid().v4();
+    // var collectionPath = '${user.name}_${user.id}';
 
-    CollectionReference<MyTransaction> transactionRef =
-        transactionDb.collection(collectionPath).withConverter<MyTransaction>(
-              fromFirestore: (snapshot, _) =>
-                  MyTransaction.fromJson(snapshot.data()!),
-              toFirestore: (transaction, _) => transaction.toJson(),
-            );
+    // var transactionRef = transactionDb
+    //     .collection(collectionPath)
+    //     .doc('Transaction ${user.name}')
+    //     .collection('Transaction')
+    //     .withConverter<MyTransaction>(
+    //       fromFirestore: (snapshot, _) =>
+    //           MyTransaction.fromJson(snapshot.data()!),
+    //       toFirestore: (transaction, _) => transaction.toJson(),
+    //     );
 
-    var querySnapshot = await transactionRef.get();
+    var querySnapshot = await collectionReference(user).get();
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
 
     return allData;
   }
 
-  // Future<void> addTransaction(MyTransaction myTransaction) async {
-  //   MyAppUser user = await userRepository.fetchCurrentUser();
-  //   print('${user.name}');
-  //   String collectionPath = '${user.name}_${user.id}';
-  //   var uuid = const Uuid().v4();
-  //   myTransaction.id = uuid;
-  //   await transaction_db.collection(collectionPath).doc('$uuid').set({
-  //     'id': uuid,
-  //     'data': myTransaction.currentDate,
-  //     'amount': myTransaction.amount,
-  //     'category': myTransaction.category,
-  //   });
-  // }
+  //*ОБНАВЛЕНИЕ ТРАНЗАКЦИИ В FIREBASE
+  Future<void> updateTransaction(
+    String id,
+    String currentDate,
+    String amount,
+    String categoryId,
+    String categoryName,
+    String categoryColor,
+    int categoryIcon,
+    String comment,
+    String typeTransaction,
+  ) async {
+    final user = await userRepository.fetchCurrentUser();
 
-  // fetchTransaction() async {
-  //   MyAppUser user = await userRepository.fetchCurrentUser();
-  //   String collectionPath = '${user.name}_${user.id}';
-  //   Map<String, dynamic> _data = {};
-  //   var docRef = await transaction_db.collection(collectionPath);
-  //   var data = docRef.snapshots().listen((result) {
-  //     result.docs.forEach((result) {
-  //       print("Данные из: snapshots() - ${result.data()}");
-  //     });
-  //   });
-  //   print("Данные из: _data) - ${_data}");
-  // }
+    await collectionReference(user).doc(id).update({
+      'id': id,
+      'currentDate': currentDate,
+      'amount': amount,
+      'categoryId': categoryId,
+      'categoryName': categoryName,
+      'categoryColor': categoryColor,
+      'categoryIcon': categoryIcon,
+      'comment': comment,
+      'typeTransaction': typeTransaction,
+    });
+  }
+
+  //*УДАЛЕНИЕ ТРАНЗАКЦИИ ИЗ FIREBASE
+  Future<void> deleteTransaction(String id) async {
+    final user = await userRepository.fetchCurrentUser();
+
+    await collectionReference(user).doc(id).delete();
+  }
 }

@@ -4,11 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:money_tracker/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:money_tracker/bloc/authentication_bloc/authentication_event.dart';
 import 'package:money_tracker/bloc/authentication_bloc/authentication_state.dart';
+import 'package:money_tracker/bloc/category_bloc/category_bloc.dart';
 import 'package:money_tracker/bloc/simple_bloc_observer.dart';
 import 'package:money_tracker/bloc/transaction_bloc/transaction_bloc.dart';
+import 'package:money_tracker/data/repository/category_repository.dart';
+import 'package:money_tracker/data/repository/list_colors_category.dart';
+import 'package:money_tracker/data/repository/list_icons_category.dart';
 import 'package:money_tracker/data/repository/transaction_repository.dart';
 import 'package:money_tracker/data/repository/user_repository.dart';
-import 'package:money_tracker/ui/pages/add_transaction.dart';
 import 'package:money_tracker/ui/pages/home_page.dart';
 import 'package:money_tracker/ui/pages/login_page.dart';
 
@@ -18,6 +21,9 @@ void main() async {
   Bloc.observer = SimpleBlocObserver();
   final userRepository = UserRepository();
   final transactionRepository = TransactionRepository();
+  final categoryRepository = CategoryRepository();
+  final colorsCategory = ColorsCategory();
+  final iconsCategory = IconsCategory();
   runApp(
     MultiBlocProvider(
       providers: [
@@ -28,7 +34,13 @@ void main() async {
         ),
         BlocProvider<TransactionBloc>(
           create: (context) =>
-              TransactionBloc(transactionRepository)..add(TransactionLoad()),
+              TransactionBloc(transactionRepository, categoryRepository)
+                ..add(TransactionLoad()),
+        ),
+        BlocProvider<CategoryBloc>(
+          create: (context) =>
+              CategoryBloc(categoryRepository, colorsCategory, iconsCategory)
+                ..add(CategoryLoad()),
         ),
       ],
       child: App(userRepository: userRepository),
