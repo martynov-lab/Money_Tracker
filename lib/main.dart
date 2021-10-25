@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:money_tracker/bloc/analytic_bloc/analytic_bloc.dart';
 import 'package:money_tracker/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:money_tracker/bloc/authentication_bloc/authentication_event.dart';
 import 'package:money_tracker/bloc/authentication_bloc/authentication_state.dart';
@@ -41,6 +42,10 @@ void main() async {
           create: (context) =>
               CategoryBloc(categoryRepository, colorsCategory, iconsCategory)
                 ..add(CategoryLoad()),
+        ),
+        BlocProvider<AnalyticBloc>(
+          create: (context) =>
+              AnalyticBloc(transactionRepository)..add(AnalyticLoadMonth()),
         ),
       ],
       child: App(userRepository: userRepository),

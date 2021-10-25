@@ -14,15 +14,17 @@ class TransactionEmptyState extends TransactionState {}
 class TransactionLoadingState extends TransactionState {}
 
 class TransactionLoadedState extends TransactionState {
-  final Map<String?, List<MyTransaction>> loadedGroupTrasaction;
+  final Map<String?, List<MyTransaction>> loadedGroupTrasactionData;
   final double sum;
   final List<Category> category;
+  final Map<String?, List<MyTransaction>> loadedGroupTrasactionCategory;
 
-  const TransactionLoadedState(
-      this.loadedGroupTrasaction, this.sum, this.category);
+  const TransactionLoadedState(this.loadedGroupTrasactionData, this.sum,
+      this.category, this.loadedGroupTrasactionCategory);
 
   @override
-  List<Object> get props => [loadedGroupTrasaction, sum];
+  List<Object> get props =>
+      [loadedGroupTrasactionData, sum, category, loadedGroupTrasactionCategory];
 
   // @override
   // String toString() => 'TrasactionLoaded { trasaction: $loadedTrasaction }';

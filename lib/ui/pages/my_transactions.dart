@@ -59,9 +59,9 @@ class MyTransactions extends StatelessWidget {
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     var dateListTransaction =
-                        state.loadedGroupTrasaction.keys.toList();
+                        state.loadedGroupTrasactionData.keys.toList();
                     var listTransaction =
-                        state.loadedGroupTrasaction.values.toList();
+                        state.loadedGroupTrasactionData.values.toList();
 
                     return Column(
                       mainAxisSize: MainAxisSize.max,
@@ -180,7 +180,7 @@ class MyTransactions extends StatelessWidget {
                       ],
                     );
                   },
-                  childCount: state.loadedGroupTrasaction.length,
+                  childCount: state.loadedGroupTrasactionData.length,
                 ),
               ),
               //,

@@ -52,6 +52,7 @@ class _UpdateCategoryState extends State<UpdateCategory> {
               onPressed: () {
                 categoryBloc.add(CategoryDelete(id: widget.id));
                 Navigator.of(context).pop();
+                categoryBloc.add(CategoryLoad());
               },
               icon: Icon(Icons.delete)),
           TextButton(

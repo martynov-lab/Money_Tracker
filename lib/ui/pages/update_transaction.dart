@@ -84,6 +84,7 @@ class _UpdateTransactionState extends State<UpdateTransaction> {
                   onPressed: () {
                     transactionBloc.add(TransactionDelete(id: widget.id));
                     Navigator.of(context).pop();
+                    transactionBloc.add(TransactionLoad());
                   },
                   icon: Icon(Icons.delete)),
               TextButton(

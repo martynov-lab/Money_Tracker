@@ -70,7 +70,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         yield TransactionEmptyState();
       } else {
         for (var item in transaction) {
-          //Подсчет суммы всех транзакций
+          //* Подсчет суммы всех транзакций
 
           var value = item.amount;
           if (item.typeTransaction == 'income') {
@@ -79,21 +79,32 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             sum -= double.parse(value!);
           }
         }
-        //Сортировка транзакций по дате
+        //* Сортировка транзакций по дате
         transaction.sort((a, b) => b.currentDate!.compareTo(a.currentDate!));
 
-        //Групперовка транзакций по дате.Создает список транзакций за день
-        var transactionGroup =
+        //* Групперовка транзакций по дате.Создает список транзакций за день
+        var transactionGroupData =
             groupBy(transaction, (MyTransaction obj) => obj.currentDate);
 
         //sort((b, a) => a.currentDate!.compareTo(b.currentDate!));
-        //print('newMap - $transactionGroup');
+        //print('transactionGroupData - $transactionGroupData');
         //print('newMap.length - ${transactionGroup.length}');
-        // print('newMap.values - ${newMap.values}');
+        //print('transactionGroup.values - ${transactionGroup.values}');
 
+        //* Групперовка транзакций по категории
+        var transactionGroupCategory =
+            groupBy(transaction, (MyTransaction obj) => obj.categoryName);
+        //print('transactionGroupCategory - $transactionGroupCategory');
+
+        //* Список категорий
         List<Category>? category = await _categoryRepository.fetchCategory();
 
-        yield TransactionLoadedState(transactionGroup, sum, category);
+        yield TransactionLoadedState(
+          transactionGroupData,
+          sum,
+          category,
+          transactionGroupCategory,
+        );
       }
       // if (state is TransactionLoadedState) {
       //   yield TransactionLoadedState(transaction);

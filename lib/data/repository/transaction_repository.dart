@@ -37,18 +37,7 @@ class TransactionRepository {
     required String typeTransaction,
   }) async {
     final user = await userRepository.fetchCurrentUser();
-    //var collectionPath = '${user.name}_${user.id}';
     var uuid = const Uuid().v4();
-
-    // CollectionReference<MyTransaction> transactionRef = transactionDb
-    //     .collection(collectionPath)
-    //     .doc('Transaction ${user.name}')
-    //     .collection('Transaction')
-    //     .withConverter<MyTransaction>(
-    //       fromFirestore: (snapshot, _) =>
-    //           MyTransaction.fromJson(snapshot.data()!),
-    //       toFirestore: (transaction, _) => transaction.toJson(),
-    //     );
 
     await collectionReference(user).doc(uuid).set(
           MyTransaction(
@@ -68,18 +57,6 @@ class TransactionRepository {
   //*ПОЛУЧЕНИЕ ТРАНЗАКЦИИ ИЗ FIREBASE
   Future<List<MyTransaction>> fetchTransaction() async {
     final user = await userRepository.fetchCurrentUser();
-    // var collectionPath = '${user.name}_${user.id}';
-
-    // var transactionRef = transactionDb
-    //     .collection(collectionPath)
-    //     .doc('Transaction ${user.name}')
-    //     .collection('Transaction')
-    //     .withConverter<MyTransaction>(
-    //       fromFirestore: (snapshot, _) =>
-    //           MyTransaction.fromJson(snapshot.data()!),
-    //       toFirestore: (transaction, _) => transaction.toJson(),
-    //     );
-
     var querySnapshot = await collectionReference(user).get();
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
 

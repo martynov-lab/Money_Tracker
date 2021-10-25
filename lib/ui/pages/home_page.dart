@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:money_tracker/bloc/category_bloc/category_bloc.dart';
 import 'package:money_tracker/data/models/user.dart';
 import 'package:money_tracker/ui/pages/my_analytics.dart';
-import 'package:money_tracker/ui/pages/my_budget.dart';
+//import 'package:money_tracker/ui/pages/my_budget.dart';
 import 'package:money_tracker/ui/pages/my_settings.dart';
 import 'package:money_tracker/ui/pages/my_transactions.dart';
 
@@ -96,10 +96,10 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.trending_up),
             label: 'Аналитика',
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.account_balance_wallet_outlined),
-            label: 'Бюджет',
-          ),
+          // const BottomNavigationBarItem(
+          //   icon: Icon(Icons.account_balance_wallet_outlined),
+          //   label: 'Бюджет',
+          // ),
           const BottomNavigationBarItem(
             icon: Icon(Icons.menu),
             label: 'Еще',
@@ -117,9 +117,11 @@ class _HomePageState extends State<HomePage> {
       return MyTransactions();
     } else if (selectedIndex == 1) {
       return MyAnalytics();
-    } else if (selectedIndex == 2) {
-      return MyBudget();
-    } else {
+    }
+    // else if (selectedIndex == 2) {
+    //   return MyBudget();
+    // }
+    else {
       return MySettings();
     }
   }
