@@ -5,7 +5,8 @@
 Приложение позволяет просто и удобно добавить информацию о расходах в момент покупки или получения дохода.
 Удобный и информативный интерфейс поможет контролировать ваши расходы и планировать бюджет.
 
-<img src="readme\login.jpg" width="150">   <img src="readme\registration.jpg" width="150">  <img src="readme\transaction.jpg" width="150">   <img src="readme\profile.jpg" width="150">
+<img src="readme\photo.jpg" width="400">
+<!-- <img src="readme\login.jpg" width="150">   <img src="readme\registration.jpg" width="150">  <img src="readme\transaction.jpg" width="150">   <img src="readme\profile.jpg" width="150"> -->
 
 **Приложение имеет 4 вкладки на основном экране:**
 1. Вкладка транзакции где вы можете добавить расход или доход по выбранной категории.
