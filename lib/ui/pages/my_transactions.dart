@@ -15,9 +15,11 @@ class MyTransactions extends StatefulWidget {
 class _MyTransactionsState extends State<MyTransactions> {
   late final ScrollController _hideButtonController;
   bool _isVisible = true;
+  late double sum;
   @override
   void initState() {
     super.initState();
+
     _hideButtonController = ScrollController();
     _hideButtonController.addListener(() {
       if (_hideButtonController.position.userScrollDirection ==
@@ -46,12 +48,34 @@ class _MyTransactionsState extends State<MyTransactions> {
   Widget build(BuildContext context) {
     return BlocBuilder<TransactionBloc, TransactionState>(
         builder: (context, state) {
+      // Scaffold();
       if (state is TransactionEmptyState) {
-        return Center(
-          child: Text(
-            'У Вас пока нет расходов!',
-            style: TextStyle(fontSize: 20.0),
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.deepPurple[300],
+            title: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('0 руб',
+                    style: TextStyle(color: Colors.white, fontSize: 16)),
+                Text('Баланс',
+                    style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w300)),
+              ],
+            ),
           ),
+          backgroundColor: Colors.grey[200],
+          body: Center(
+            child: Text(
+              'У Вас пока нет расходов!',
+              style: TextStyle(fontSize: 20.0),
+            ),
+          ),
+          floatingActionButton: _isVisible ? floatActionButton() : null,
         );
       }
       if (state is TransactionLoadingState) {
@@ -85,7 +109,6 @@ class _MyTransactionsState extends State<MyTransactions> {
                   state.loadedGroupTrasactionData.keys.toList();
               var listTransaction =
                   state.loadedGroupTrasactionData.values.toList();
-
               return Column(
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,6 +128,7 @@ class _MyTransactionsState extends State<MyTransactions> {
                   ...listTransaction[index].map(
                     (transaction) => Column(
                       children: [
+                        // По нажатию на транзакции переходит на страницу редактирования транзакции
                         GestureDetector(
                           child: Container(
                             padding: const EdgeInsets.only(top: 5, bottom: 5),
@@ -131,7 +155,6 @@ class _MyTransactionsState extends State<MyTransactions> {
                                       transaction.categoryColor.toString()),
                                 ),
                               ),
-
                               title: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
@@ -196,77 +219,75 @@ class _MyTransactionsState extends State<MyTransactions> {
                 ],
               );
             },
-            //childCount: state.loadedGroupTrasactionData.length,
           ),
-          floatingActionButton: _isVisible
-              ? SpeedDial(
-                  icon: Icons.add,
-                  activeIcon: Icons.close,
-                  buttonSize: 60.0,
-                  backgroundColor: Colors.deepPurple[400],
-                  elevation: 8.0,
-                  visible: true,
-                  spacing: 10,
-                  // renderOverlay: true,
-                  closeManually: false,
-                  curve: Curves.bounceIn,
-                  overlayColor: Colors.black,
-                  overlayOpacity: 0.5,
-                  children: [
-                    // SpeedDialChild(
-                    //   //speed dial child
-                    //   child: Icon(Icons.swap_horiz),
-                    //   backgroundColor: Colors.deepPurple[400],
-                    //   foregroundColor: Colors.white,
-                    //   label: 'Перевод',
-                    //   labelStyle: TextStyle(fontSize: 18.0),
-                    //   onTap: () {
-                    //     print('Перевод');
-                    //   },
-                    // ),
-                    SpeedDialChild(
-                      //speed dial child
-                      child: Icon(Icons.add),
-                      backgroundColor: Colors.deepPurple[400],
-                      foregroundColor: Colors.white,
-                      label: 'Доход',
-                      labelStyle: TextStyle(fontSize: 18.0),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) {
-                            return AddTransaction(typeTransaction: 'income');
-                          }),
-                        );
-                        print('Доход');
-                      },
-                    ),
-                    SpeedDialChild(
-                      //speed dial child
-                      child: Icon(Icons.remove),
-                      backgroundColor: Colors.deepPurple[400],
-                      foregroundColor: Colors.white,
-                      label: 'Расход',
-                      labelStyle: TextStyle(fontSize: 18.0),
-                      onTap: () {
-                        //Navigator.of(context).pushNamed('/expenditure');
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) {
-                            return AddTransaction(
-                                typeTransaction: 'expenditure');
-                          }),
-                        );
-                        print('Расход');
-                      },
-                    ),
-                  ],
-                )
-              : null,
+          //*Кнопка скрывается при скролле
+          floatingActionButton: _isVisible ? floatActionButton() : null,
         );
-
-        //,
-        //);
       }
       return Center();
     });
+  }
+
+  Widget floatActionButton() {
+    return SpeedDial(
+      icon: Icons.add,
+      activeIcon: Icons.close,
+      buttonSize: 60.0,
+      backgroundColor: Colors.deepPurple[400],
+      elevation: 8.0,
+      visible: true,
+      spacing: 10,
+      // renderOverlay: true,
+      closeManually: false,
+      curve: Curves.bounceIn,
+      overlayColor: Colors.black,
+      overlayOpacity: 0.5,
+      children: [
+        // SpeedDialChild(
+        //   //speed dial child
+        //   child: Icon(Icons.swap_horiz),
+        //   backgroundColor: Colors.deepPurple[400],
+        //   foregroundColor: Colors.white,
+        //   label: 'Перевод',
+        //   labelStyle: TextStyle(fontSize: 18.0),
+        //   onTap: () {
+        //     print('Перевод');
+        //   },
+        // ),
+        SpeedDialChild(
+          //speed dial child
+          child: Icon(Icons.add),
+          backgroundColor: Colors.deepPurple[400],
+          foregroundColor: Colors.white,
+          label: 'Доход',
+          labelStyle: TextStyle(fontSize: 18.0),
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) {
+                return AddTransaction(typeTransaction: 'income');
+              }),
+            );
+            print('Доход');
+          },
+        ),
+        SpeedDialChild(
+          //speed dial child
+          child: Icon(Icons.remove),
+          backgroundColor: Colors.deepPurple[400],
+          foregroundColor: Colors.white,
+          label: 'Расход',
+          labelStyle: TextStyle(fontSize: 18.0),
+          onTap: () {
+            //Navigator.of(context).pushNamed('/expenditure');
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) {
+                return AddTransaction(typeTransaction: 'expenditure');
+              }),
+            );
+            print('Расход');
+          },
+        ),
+      ],
+    );
   }
 }

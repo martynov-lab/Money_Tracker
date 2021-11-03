@@ -7,8 +7,6 @@ abstract class TransactionState extends Equatable {
   List<Object> get props => [];
 }
 
-//class TransactionInitial extends TransactionState {}
-
 class TransactionEmptyState extends TransactionState {}
 
 class TransactionLoadingState extends TransactionState {}

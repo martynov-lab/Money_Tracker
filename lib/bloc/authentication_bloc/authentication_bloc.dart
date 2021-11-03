@@ -1,3 +1,8 @@
+// ignore_for_file: omit_local_variable_types
+
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:money_tracker/data/repository/user_repository.dart';
 
@@ -19,6 +24,8 @@ class AuthenticationBloc
       yield* _mapAuthenticationStartedToState();
     } else if (event is AuthenticationLoggedIn) {
       yield* _mapAuthenticationLogginInToState();
+    } else if (event is AuthenticationUpdate) {
+      yield* _mapAuthenticationUpdateToState(event.imageUrl);
     } else if (event is AuthenticationLoggedOut) {
       yield* _mapAuthenticationLogginOutToState();
     }
@@ -30,6 +37,7 @@ class AuthenticationBloc
       final isSignedIn = await _userRepository.isSignedIn();
       if (isSignedIn) {
         final firebaseUser = await _userRepository.fetchCurrentUser();
+
         yield AuthenticationSuccess(firebaseUser);
       } else {
         yield AuthenticationFailure();
@@ -43,6 +51,28 @@ class AuthenticationBloc
   Stream<AuthenticationState> _mapAuthenticationLogginInToState() async* {
     final firebaseUser = await _userRepository.fetchCurrentUser();
     yield AuthenticationSuccess(firebaseUser);
+  }
+
+  //AuthenticationUpdate
+  Stream<AuthenticationState> _mapAuthenticationUpdateToState(
+      File _image) async* {
+    try {
+      final firebaseUser = await _userRepository.fetchCurrentUser();
+
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref =
+          storage.ref().child('users/${firebaseUser.id}/avatar.jpg');
+      UploadTask uploadTask = ref.putFile(_image);
+      var imageUrl = await (await uploadTask).ref.getDownloadURL();
+      String url = imageUrl.toString();
+
+      // print('URL: $url');
+      await _userRepository.updateUserPhoto(url);
+
+      yield AuthenticationSuccess(firebaseUser);
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   //AuthenticationLoggedOut

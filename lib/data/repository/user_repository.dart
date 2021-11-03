@@ -43,9 +43,9 @@ class UserRepository {
       user = _firebaseAuth.currentUser;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        //print('The password provided is too weak.');
+        print('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-        //print('The account already exists for that email.');
+        print('The account already exists for that email.');
       }
     } catch (e) {
       return null;
@@ -81,7 +81,6 @@ class UserRepository {
     var _user = _firebaseAuth.currentUser!;
     await _user.updatePhotoURL(url);
     await _user.reload();
-    //MyAppUser updateUser = _userFromFirebase(_firebaseAuth.currentUser!);
   }
 
   Future<bool> isSignedIn() async {

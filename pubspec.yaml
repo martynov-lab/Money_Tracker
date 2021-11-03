@@ -31,7 +31,7 @@ dependencies:
   cloud_firestore: ^2.4.0
   firebase_core: ^1.4.0
   firebase_storage: ^10.0.1
-  image_picker: ^0.8.2
+  # image_picker: ^0.8.2
   firebase_auth: ^3.0.1
   google_sign_in: ^5.0.5
   # provider: ^5.0.0
@@ -47,6 +47,7 @@ dependencies:
   collection: ^1.15.0
   syncfusion_flutter_charts: ^19.3.45+1
   pie_chart: ^5.0.1
+  image_picker: ^0.8.4+3
 
 
 

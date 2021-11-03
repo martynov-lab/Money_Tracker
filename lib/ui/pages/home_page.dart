@@ -24,63 +24,6 @@ class _HomePageState extends State<HomePage> {
     final categoryBloc = BlocProvider.of<CategoryBloc>(context);
     categoryBloc.add(CategoryLoad());
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Money Tracker'),
-      //   centerTitle: true,
-      // ),
-      // drawer: Drawer(
-      //   child: Column(
-      //     mainAxisSize: MainAxisSize.max,
-      //     children: <Widget>[
-      //       DrawerHeader(
-      //         child: CircleAvatar(
-      //           radius: 50,
-      //           backgroundImage: NetworkImage(widget.user.photo.toString()),
-      //         ),
-      //       ),
-      //       Expanded(
-      //         child: Column(
-      //           mainAxisSize: MainAxisSize.max,
-      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //           children: <Widget>[
-      //             Column(
-      //               mainAxisSize: MainAxisSize.min,
-      //               children: <Widget>[
-      //                 ListTile(
-      //                   title: const Text('Аккаунт'),
-      //                   leading: const Icon(Icons.person),
-      //                   onTap: () {
-      //                     Navigator.of(context).push(
-      //                       MaterialPageRoute(builder: (context) {
-      //                         return ProfilePage(user: widget.user);
-      //                       }),
-      //                     );
-      //                   },
-      //                 ),
-      //                 const ListTile(
-      //                   title: Text('Настройки'),
-      //                   leading: Icon(Icons.settings),
-      //                 ),
-      //               ],
-      //             ),
-      //             Container(
-      //               margin: const EdgeInsets.only(bottom: 20),
-      //               child: ListTile(
-      //                 title: const Text('Выйти'),
-      //                 leading: const Icon(Icons.exit_to_app),
-      //                 onTap: () {
-      //                   BlocProvider.of<AuthenticationBloc>(context).add(
-      //                     AuthenticationLoggedOut(),
-      //                   );
-      //                 },
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
       body: getBody(),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,

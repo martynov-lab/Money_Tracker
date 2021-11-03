@@ -202,6 +202,7 @@ class _RegisterFormState extends State<RegisterForm> {
       RegisterSubmitted(
         email: _emailController.text,
         password: _passwordController.text,
+        name: _nameController.text,
       ),
     );
   }

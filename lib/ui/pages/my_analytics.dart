@@ -68,7 +68,11 @@ class _MyAnalyticsState extends State<MyAnalytics> {
       backgroundColor: Colors.grey[200],
       body: BlocBuilder<AnalyticBloc, AnalyticState>(builder: (context, state) {
         if (state is AnalyticEmptyState) {
-          return Center(child: Text('У вас пока нет транзакций'));
+          return Center(
+              child: Text(
+            'У вас пока нет транзакций',
+            style: TextStyle(fontSize: 20.0),
+          ));
         }
         if (state is AnalyticLoadingState) {
           return Center(child: CircularProgressIndicator());
@@ -92,11 +96,17 @@ class _MyAnalyticsState extends State<MyAnalytics> {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text(
-                              'Расходы за ${state.currentMonth}',
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 20),
-                            ),
+                            isExpenses
+                                ? Text(
+                                    'Расходы за ${state.currentMonth}',
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 20),
+                                  )
+                                : Text(
+                                    'Доходы за ${state.currentMonth}',
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 20),
+                                  ),
                             Text(
                               '${state.sumTransactionPerMonth} руб',
                               style:
