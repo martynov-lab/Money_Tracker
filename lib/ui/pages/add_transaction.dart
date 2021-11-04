@@ -21,7 +21,7 @@ class _AddTransactionState extends State<AddTransaction> {
   bool _changeRepeat = false;
   bool _isPickedDate = false;
   DateTime nowDate = DateTime.now();
-  DateFormat formatterDate = DateFormat('dd.MM.yyyy');
+  DateFormat formatterDate = DateFormat('yyyy-MM-dd'); //dd.MM.yyyy
   late String formattedDate = formatterDate.format(nowDate);
 
   int selectedIndex = 0;

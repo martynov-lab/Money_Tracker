@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
 import 'package:money_tracker/data/models/category.dart';
 import 'package:money_tracker/data/models/transaction.dart';
 import 'package:money_tracker/data/repository/category_repository.dart';
@@ -82,14 +83,13 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         //* Сортировка транзакций по дате
         transaction.sort((a, b) => b.currentDate!.compareTo(a.currentDate!));
 
+        transaction.forEach((element) {
+          element.currentDate = DateFormat('dd.MM.yyyy')
+              .format(DateTime.parse(element.currentDate!));
+        });
         //* Групперовка транзакций по дате.Создает список транзакций за день
         var transactionGroupData =
             groupBy(transaction, (MyTransaction obj) => obj.currentDate);
-
-        //sort((b, a) => a.currentDate!.compareTo(b.currentDate!));
-        //print('transactionGroupData - $transactionGroupData');
-        //print('newMap.length - ${transactionGroup.length}');
-        //print('transactionGroup.values - ${transactionGroup.values}');
 
         //* Групперовка транзакций по категории
         var transactionGroupCategory =
